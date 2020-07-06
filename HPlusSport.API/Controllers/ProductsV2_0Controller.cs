@@ -8,13 +8,15 @@ using HPlusSport.API.Models;
 
 namespace HPlusSport.API.Controllers
 {
-    [Route("[controller]")]
+    [ApiVersion("2.0")]
+    // [Route("v{v:apiVersion}/products")]
+    [Route("products")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsV2_0Controller : ControllerBase
     {
         private readonly ShopContext _context;
 
-        public ProductsController(ShopContext context)
+        public ProductsV2_0Controller(ShopContext context)
         {
             _context = context;
 
@@ -24,7 +26,7 @@ namespace HPlusSport.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] ProductQueryParameters queryParameters)
         {
-            IQueryable<Product> products = _context.Products;
+            IQueryable<Product> products = _context.Products.Where(p => p.IsAvailable == true);
             
             if (queryParameters.MinPrice != null && 
                 queryParameters.MaxPrice != null) 
